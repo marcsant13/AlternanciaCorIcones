@@ -1,2 +1,3 @@
-#FUNCIONALIDADE
--Alterna a cor do icone clicado de preto para branco usando ViewModel
+# FUNCIONALIDADE
+- Ao clicar em um ícone, sua cor alterna entre preto e branco utilizando ViewModel.
+
