@@ -24,18 +24,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.marcos.alternariconescompose.R
+import com.marcos.alternariconescompose.navigateSingleTopTo
 import com.marcos.alternariconescompose.viewmodel.BottomBarViewModel
 
 @Composable
-@Preview
-fun BottomBar() {
+fun BottomBar(navController: NavController) {
 
     val viewModel: BottomBarViewModel = viewModel()
-    val statesIcon = viewModel.mapStatesButtons
+    val routeSelected = viewModel.routeColumn
     val iconAccount = R.drawable.line_md__account
     val iconEmail = R.drawable.line_md__email
     val iconDocument = R.drawable.line_md__document
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
     Box(
         modifier = Modifier
@@ -56,11 +59,15 @@ fun BottomBar() {
                 Icon(
                     painter = painterResource(iconAccount),
                     contentDescription = null,
-                    tint = if (statesIcon.get(iconAccount) == true) Color.White else Color.Black,
+                    tint = if (currentRoute == "profile") Color.White else Color.Black,
                     modifier = Modifier
                         .size(36.dp)
                         .clickable(
-                            onClick = { viewModel.changeIconColor(iconAccount) },
+                            onClick = {
+                                viewModel.checkRoute(iconAccount)
+                                //viewModel.changeIconColor()
+                                navController.navigateSingleTopTo(routeSelected.value)
+                                      },
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() })
                 )
@@ -69,10 +76,14 @@ fun BottomBar() {
                 Icon(
                     painter = painterResource(iconEmail),
                     contentDescription = null,
-                    tint = if (statesIcon.get(iconEmail) == true) Color.White else Color.Black,
+                    tint = if (currentRoute == "message") Color.White else Color.Black,
                     modifier = Modifier
                         .size(36.dp)
-                        .clickable(onClick = { viewModel.changeIconColor(iconEmail) },
+                        .clickable(onClick = {
+                            viewModel.checkRoute(iconEmail)
+                            //viewModel.changeIconColor()
+                            navController.navigateSingleTopTo(routeSelected.value)
+                        },
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() })
                 )
@@ -81,12 +92,16 @@ fun BottomBar() {
                 Icon(
                     painter = painterResource(iconDocument),
                     contentDescription = null,
-                    tint = if (statesIcon.get(iconDocument) == true) Color.White else Color.Black,
                     modifier = Modifier
                         .size(36.dp)
-                        .clickable(onClick = { viewModel.changeIconColor(iconDocument) },
+                        .clickable(onClick = {
+                            viewModel.checkRoute(iconDocument)
+                            //viewModel.changeIconColor()
+                            navController.navigateSingleTopTo(routeSelected.value)
+                        },
                             indication = null,
-                            interactionSource = remember { MutableInteractionSource() })
+                            interactionSource = remember { MutableInteractionSource() }),
+                    tint = if (currentRoute == "document") Color.White else Color.Black,
                 )
             }
         }
